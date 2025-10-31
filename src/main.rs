@@ -3,8 +3,12 @@ use std::{env, fs};
 use chip8::Vm;
 
 fn main() {
-    let filename = env::args().nth(1).unwrap();
-    let speed = env::args().nth(2).unwrap().parse::<u64>().unwrap();
+    let filename = env::args().nth(1).expect("no rom provided");
+    let speed = env::args()
+        .nth(2)
+        .expect("no emulation speed provided")
+        .parse::<u64>()
+        .unwrap();
 
     let mut rom = [0; 0x1000];
     let mut buf = fs::read(filename).unwrap();

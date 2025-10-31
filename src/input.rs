@@ -1,6 +1,6 @@
 use std::{sync::mpsc::Sender, thread};
 
-use evdev::{InputEvent, Key, InputEventKind};
+use evdev::{InputEvent, InputEventKind, Key};
 
 const REQUIRED_KEYS: &[Key] = &[
     Key::KEY_1,
@@ -31,6 +31,12 @@ pub fn start_listeners(channel: Sender<InputEvent>) {
             })
         })
         .collect::<Vec<_>>();
+
+    assert_ne!(
+        devices.len(),
+        0,
+        "no suitable input devices detected. make sure you have read access to files in /dev/input"
+    );
 
     // spawn one thread for each device
     for mut device in devices {
