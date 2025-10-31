@@ -38,9 +38,10 @@ pub struct Vm {
 
 impl Vm {
     pub fn run(mut rom: [u8; 0x1000], speed: u64) -> Self {
-        // force viuer to use kitty protocol
-        env::set_var("TERM", "kitty");
+        // force viuer to use unicode blocks
+        env::set_var("TERM", "xterm-256color");
         let viuer_conf = Config {
+            use_kitty: false,
             use_iterm: false,
             // restore_cursor: true,
             // y: 1,
