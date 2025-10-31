@@ -3,9 +3,6 @@
 This emulator was mostly written in a single day a couple of years ago. It's not
 the best out there, but should theoretically support everything.
 
-Input is handled via `evdev`, which requires the user to have read access to the
-files in `/dev/input`, usually by being in the `input` group.
-
 ## Usage
 
 The binary takes two arguments:
@@ -16,4 +13,23 @@ The binary takes two arguments:
 
 ```bash
 cargo run --release -- <path/to/rom.ch8> <speed>
+```
+
+### Input
+
+Input is handled via `evdev`, which requires the user to have read access to the
+files in `/dev/input`, usually by being in the `input` group.
+
+The 4x4 keypad is composed of the following keys:
+
+```
++---+---+---+---+
+| 1 | 2 | 3 | 4 |
++---+---+---+---+
+| Q | W | E | R |
++---+---+---+---+
+| A | S | D | F |
++---+---+---+---+
+| Z | X | C | V |
++---+---+---+---+
 ```
