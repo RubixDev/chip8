@@ -2,7 +2,7 @@ use std::{
     env,
     sync::mpsc::{self, Receiver},
     thread,
-    time::Duration,
+    time::{Duration, Instant},
 };
 
 use evdev::InputEvent;
@@ -30,6 +30,7 @@ pub struct Vm {
     screen: [[bool; 64]; 32],
     delay_timer: u8,
     sound_timer: u8,
+    sound_start: Instant,
     viuer_conf: Config,
     input_channel: Receiver<InputEvent>,
     pressed_keys: [bool; 16],
@@ -62,6 +63,7 @@ impl Vm {
             screen: [[false; 64]; 32],
             delay_timer: 0,
             sound_timer: 0,
+            sound_start: Instant::now(),
             viuer_conf,
             input_channel,
             pressed_keys: [false; 16],
@@ -72,12 +74,6 @@ impl Vm {
         sink.append(SquareWave::new(240.));
         sink.set_volume(0.4);
         sink.pause();
-        // loop {
-        //     sink.play();
-        //     thread::sleep(Duration::from_millis(speed * 4));
-        //     sink.pause();
-        //     thread::sleep(Duration::from_millis(speed * 4));
-        // }
 
         let mut print_offset = 0;
         loop {
@@ -87,7 +83,10 @@ impl Vm {
                 if sink.is_paused() {
                     sink.play();
                 }
-            } else if !sink.is_paused() {
+            } else if !sink.is_paused()
+                // play sounds for at least 50 milliseconds
+                && Instant::now().duration_since(vm.sound_start).as_millis() > 50
+            {
                 sink.pause();
             }
             thread::sleep(Duration::from_millis(speed));
@@ -285,9 +284,7 @@ impl Vm {
                 }
                 (0xf0..=0xff, 0x18) => {
                     let vx = vm.v[(hi & 0x0f) as usize];
-                    println!(
-                        "sound_timer = {vx} AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa"
-                    );
+                    vm.sound_start = Instant::now();
                     vm.sound_timer = vx;
                 }
                 (0xf0..=0xff, 0x1e) => {
