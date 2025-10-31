@@ -1,0 +1,13 @@
+[package]
+name = "chip8"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+evdev = "0.12.1"
+image = "0.24.6"
+rand = "0.8.5"
+rodio = "0.17.1"
+viuer = "0.6.2"
